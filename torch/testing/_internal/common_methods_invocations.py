@@ -14,8 +14,8 @@ from torch.testing import \
      floating_and_complex_types, floating_and_complex_types_and,
      all_types_and_complex_and)
 from torch.testing._internal.common_device_type import \
-    (skipCUDAIfNoMagma, skipCPUIfNoLapack, expectedFailureCUDA,
-     expectedAlertNondeterministic, precisionOverride)
+    (skipCUDAIfNoMagma, skipCUDAIfRocm, skipCPUIfNoLapack, skipCPUIfNoMkl,
+     expectedFailureCUDA, expectedAlertNondeterministic, precisionOverride)
 from torch.testing._internal.common_utils import \
     (prod_single_zero, random_square_matrix_of_rank,
      random_symmetric_matrix, random_symmetric_psd_matrix,
@@ -1650,5 +1650,7 @@ def exclude_tensor_method(name, test_name):
     is_magic_method = name[:2] == '__' and name[-2:] == '__'
     is_inplace = name[-1] == "_" and not is_magic_method
     if not is_inplace and name in exclude_outplace_tensor_method:
+        return True
+    if 'fft.' in name:
         return True
     return False
